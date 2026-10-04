@@ -140,6 +140,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   // Toast / feedback message
   const [feedback, setFeedback] = useState<string | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [githubRepoUrl, setGithubRepoUrl] = useState('https://github.com/serviceku31/serviceku.git');
 
   if (!isOpen) return null;
 
@@ -1278,88 +1279,85 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           {/* ================= TAB 5: GITHUB PUSH GUIDE ================= */}
           {activeTab === 'github' && (
             <div className="space-y-6">
-              <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800">
-                <div className="flex items-center gap-3 mb-4">
+              <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-md border border-slate-800 space-y-6">
+                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                     <Github className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h3 className="text-lg font-black tracking-tight font-['Outfit',sans-serif]">
-                      Panduan Push Proyek Serviceku ke GitHub
+                      Tempel Langsung ke GitHub (1 Langkah Praktis)
                     </h3>
                     <p className="text-xs text-slate-300">
-                      Instruksi lengkap langkah demi langkah untuk mengunggah source code ini ke akun GitHub Anda
+                      Cukup masukkan link GitHub Anda, klik Salin, lalu tempel (Paste) di terminal
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4 text-xs sm:text-sm">
-                  {/* Step 1 */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-cyan-400">1. Buat Repository Baru di GitHub</span>
-                      <a
-                        href="https://github.com/new"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[11px] text-blue-400 hover:underline flex items-center gap-1"
-                      >
-                        Buka github.com/new <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                    <p className="text-slate-400 text-xs">
-                      Beri nama repository misalnya <code className="text-cyan-300 font-mono">serviceku-website</code>, pilih <strong>Public</strong> atau <strong>Private</strong>, lalu klik <em>Create repository</em>.
-                    </p>
+                {/* Input URL Repository */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <label className="block text-xs font-bold text-cyan-400 uppercase tracking-wider">
+                    Link Repository GitHub Anda:
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      value={githubRepoUrl}
+                      onChange={(e) => setGithubRepoUrl(e.target.value.trim())}
+                      placeholder="https://github.com/username/serviceku.git"
+                      className="flex-1 px-3.5 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-xs sm:text-sm font-mono text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                    />
+                    <a
+                      href="https://github.com/new"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold transition-colors whitespace-nowrap"
+                    >
+                      <span>Buka Buat Repo Baru</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* 1-Click Copy Command (Single Line) */}
+                <div className="bg-emerald-950/60 border border-emerald-500/40 p-5 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black text-emerald-400 uppercase tracking-wide flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-emerald-400" />
+                      Perintah 1 Baris (Tinggal Paste & Tekan Enter):
+                    </span>
+                    <button
+                      onClick={() => {
+                        const cmd = `git init && git add . && git commit -m "Website Serviceku Elektronik" && git branch -M main && git remote remove origin 2>/dev/null; git remote add origin ${githubRepoUrl || 'https://github.com/serviceku31/serviceku.git'} && git push -u origin main`;
+                        copyToClipboard(cmd, 1);
+                        showToast('Perintah 1 baris berhasil disalin! Tinggal tempel di terminal.');
+                      }}
+                      className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
+                    >
+                      {copiedIndex === 1 ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      <span>{copiedIndex === 1 ? 'Tersalin!' : 'Salin Perintah 1 Baris'}</span>
+                    </button>
                   </div>
 
-                  {/* Step 2 */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-cyan-400">2. Jalankan Perintah Git di Terminal</span>
-                      <button
-                        onClick={() =>
-                          copyToClipboard(
-                            `git init\ngit add .\ngit commit -m "Initial commit - Website Promosi Jasa Serviceku Elektronik"\ngit branch -M main\ngit remote add origin https://github.com/USERNAME_ANDA/serviceku-website.git\ngit push -u origin main`,
-                            2
-                          )
-                        }
-                        className="text-[11px] text-emerald-400 hover:text-emerald-300 flex items-center gap-1 cursor-pointer font-bold"
-                      >
-                        {copiedIndex === 2 ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        <span>{copiedIndex === 2 ? 'Tersalin!' : 'Salin Semua Perintah'}</span>
-                      </button>
-                    </div>
+                  <pre className="bg-black/80 text-emerald-300 p-3 rounded-xl font-mono text-xs overflow-x-auto whitespace-pre-wrap break-all border border-emerald-900/60">
+{`git init && git add . && git commit -m "Website Serviceku Elektronik" && git branch -M main && git remote remove origin 2>/dev/null; git remote add origin ${githubRepoUrl || 'https://github.com/serviceku31/serviceku.git'} && git push -u origin main`}
+                  </pre>
+                  <p className="text-[11px] text-emerald-200/80">
+                    💡 <strong>Cara pakai:</strong> Buka Terminal / CMD di komputer Anda, tekan <strong>Ctrl + V</strong> (Tempel) lalu tekan <strong>Enter</strong>. Semua file langsung terkirim ke GitHub!
+                  </p>
+                </div>
 
-                    <pre className="bg-black/80 text-emerald-400 p-3.5 rounded-lg font-mono text-xs overflow-x-auto whitespace-pre leading-relaxed border border-slate-800">
-{`# 1. Inisialisasi git jika belum ada
-git init
-
-# 2. Tambahkan semua file proyek
-git add .
-
-# 3. Buat commit pertama
-git commit -m "Website Promosi Jasa Serviceku Elektronik"
-
-# 4. Arahkan branch ke main
-git branch -M main
-
-# 5. Hubungkan ke repository GitHub Anda (ganti USERNAME_ANDA)
-git remote add origin https://github.com/USERNAME_ANDA/serviceku-website.git
-
-# 6. Push kode ke GitHub
-git push -u origin main`}
-                    </pre>
+                {/* Windows 1-Click BAT Option */}
+                <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <span className="font-bold text-slate-200 block">Pengguna Windows?</span>
+                    <span className="text-slate-400 text-[11px]">
+                      Di dalam proyek sudah tersedia file <code className="text-cyan-400 font-mono">push-ke-github.bat</code>. Tinggal klik 2x (double-click) untuk upload otomatis!
+                    </span>
                   </div>
-
-                  {/* Step 3 */}
-                  <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
-                    <span className="font-bold text-cyan-400 block">3. Opsi Deploy / Hosting Gratis:</span>
-                    <ul className="list-disc list-inside text-slate-300 space-y-1 text-xs">
-                      <li><strong>Vercel:</strong> Hubungkan akun GitHub Anda di <a href="https://vercel.com" target="_blank" className="text-blue-400 underline">vercel.com</a>, pilih repo Serviceku, otomatis langsung online dengan SSL gratis.</li>
-                      <li><strong>Netlify:</strong> Buka <a href="https://netlify.com" target="_blank" className="text-blue-400 underline">netlify.com</a>, import dari GitHub, build command: <code>npm run build</code>, publish directory: <code>dist</code>.</li>
-                      <li><strong>Railway / Render:</strong> Untuk menjalankan full-stack Express server dengan database permanen.</li>
-                    </ul>
-                  </div>
+                  <span className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 font-mono text-[11px] self-start sm:self-auto">
+                    push-ke-github.bat
+                  </span>
                 </div>
               </div>
             </div>
