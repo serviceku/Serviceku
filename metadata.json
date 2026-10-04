@@ -1,0 +1,6 @@
+{
+  "name": "Serviceku - Jasa Service Elektronik Terbaik",
+  "description": "Website promosi jasa service elektronik terpercaya (AC, Kulkas, Mesin Cuci, Showcase, Freezer, Dispenser) dengan pemesanan langsung WhatsApp, slideshow banner, dan dashboard admin untuk publikasi layanan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
